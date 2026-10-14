@@ -15,6 +15,15 @@ jobs:
     steps:
       - name: Repository auschecken
         uses: actions/checkout@v4
+        
+      - name: Speicherplatz auf dem Runner freigeben
+        shell: pwsh
+        run: |
+          Write-Host "Lösche ungenutzte Tools, um Speicherplatz freizumachen..."
+          Remove-Item -Recurse -Force "C:\hostedtoolcache" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "C:\Program Files\dotnet" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "C:\Android" -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force "C:\ProgramData\Package Cache" -ErrorAction SilentlyContinue
 
       - name: Windows 11 ARM64 ISO herunterladen
         shell: pwsh
