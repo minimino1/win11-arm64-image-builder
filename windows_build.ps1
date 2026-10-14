@@ -25,8 +25,8 @@ $env:OUT_VMPKG     = "win11-droidvm-final.vmpkg"
 $env:DRIVERS_DIR   = "https://github.com/HuJK/gunyah-guest-drivers-windows/releases/download/dev/gunyah-arm64-drivers.zip"
 $env:OPENSSH_SRC   = "https://github.com/PowerShell/Win32-OpenSSH/releases/download/10.0.0.0p2-Preview/OpenSSH-ARM64-v10.0.0.0.msi"
 
-$env:DVM_USERNAME      = "USER"
-$env:DVM_PASSWORD      = "DroidVM"
+$env:DVM_USERNAME      = "mini"
+$env:DVM_PASSWORD      = "mini"
 $env:SSH_PUBKEY        = "ssh-ed25519 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA root@ReplaceMe"
 
 $env:DISK_SIZE_MB      = "40960" # 40GB
