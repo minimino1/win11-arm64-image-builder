@@ -39,6 +39,8 @@ jobs:
 
       - name: Windows Build Skript ausführen
         shell: pwsh
+        env:
+          IMAGE_INDEX: "1"
         run: |
           # GitHub Actions Runner führen Befehle standardmäßig als Administrator aus,
           # wodurch die Admin-Prüfung im Skript erfolgreich passiert wird.
