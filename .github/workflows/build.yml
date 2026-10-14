@@ -1,0 +1,55 @@
+name: Build Windows 11 ARM64 Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      iso_url:
+        description: 'Direkter Download-Link zur Windows 11 ARM64 ISO'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Windows 11 ARM64 ISO herunterladen
+        shell: pwsh
+        run: |
+          # Zielordner erstellen, falls nicht vorhanden
+          $DownloadDir = "$env:USERPROFILE\Downloads"
+          if (-not (Test-Path $DownloadDir)) { New-Item -ItemType Directory -Force -Path $DownloadDir }
+          
+          # Der exakte Dateiname, den das Skript erwartet
+          $IsoPath = "$DownloadDir\SW_DVD9_Win_Pro_11_25H2_Arm64_English_Pro_Ent_EDU_N_MLF_X24-13111.ISO"
+          
+          Write-Host "Lade ISO von der angegebenen URL herunter..."
+          Invoke-WebRequest -Uri "${{ github.event.inputs.iso_url }}" -OutFile $IsoPath
+          Write-Host "Download abgeschlossen: $IsoPath"
+
+      - name: QEMU installieren
+        shell: pwsh
+        # Das Skript nutzt winget für die QEMU-Installation. Winget ist in GitHub Actions 
+        # oft problematisch (hängt sich auf oder verlangt Interaktion). 
+        # Daher installieren wir es hier vorab sicher über Chocolatey.
+        run: choco install qemu --confirm --no-progress
+
+      - name: Windows Build Skript ausführen
+        shell: pwsh
+        run: |
+          # GitHub Actions Runner führen Befehle standardmäßig als Administrator aus,
+          # wodurch die Admin-Prüfung im Skript erfolgreich passiert wird.
+          .\windows_build.ps1
+
+      - name: Fertige Images hochladen
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: win11-droidvm-images
+          path: |
+            win11-droidvm-final.qcow2
+            win11-droidvm-final.vmpkg
+          retention-days: 7
